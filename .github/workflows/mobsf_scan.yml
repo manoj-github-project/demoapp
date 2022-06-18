@@ -8,18 +8,15 @@ on:
 jobs:
   mobsfscan:
     runs-on: ubuntu-latest
-    name: mobsfscan code scanning 
+    name: mobsfscan code scanning
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
     - name: mobsfscan
       uses: MobSF/mobsfscan@main
-      env:
-          INPUT_FILE_NAME: build/app/outputs/apk/app.apk
-          SCAN_TYPE: apk
-          OUTPUT_FILE_NAME: mobsf-report
-    - name: Upload MobSF Analysis PDF Result
-      uses: actions/upload-artifact@v2
       with:
-          name: mobsf-report.pdf
-          path: mobsf-report.pdf
+        args: '. --sarif --output results.sarif || true'
+    - name: Upload mobsfscan report
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
